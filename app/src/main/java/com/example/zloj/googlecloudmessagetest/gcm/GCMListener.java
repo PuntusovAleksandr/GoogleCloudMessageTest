@@ -31,13 +31,8 @@ public class GCMListener extends GcmListenerService {
                 PowerManager.SCREEN_DIM_WAKE_LOCK
                         | PowerManager.ON_AFTER_RELEASE
                         | PowerManager.ACQUIRE_CAUSES_WAKEUP, "bbbb");
-//                wl.acquire(15000);
-        wl.acquire(1500);
-//        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
-//        final KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-//        lock.disableKeyguard();
-////        Thread wake =
-                new Thread(new Runnable() {
+        wl.acquire(1000);
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 notification(data);
@@ -108,6 +103,14 @@ public class GCMListener extends GcmListenerService {
 // mId allows you to update the notification later on.
         mNotificationManager.notify(0, mBuilder.build());
 
+
+        try {
+            Intent intentTwo = new Intent(getApplicationContext(), MainActivity.class);
+            intentTwo.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intentTwo);
+        } catch (Exception e) {
+
+        }
     }
 
     private String parseJson(Bundle bundle) {
