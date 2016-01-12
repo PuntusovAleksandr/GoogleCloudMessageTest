@@ -1,7 +1,5 @@
 package com.example.zloj.googlecloudmessagetest.gcm;
 
-import android.app.Activity;
-import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -28,26 +26,21 @@ public class GCMListener extends GcmListenerService {
     public void onMessageReceived(String from, final Bundle data) {
         super.onMessageReceived(from, data);
         System.out.println("MESSAGE RECEIVED: " + data.toString());
-
-//        Thread wake =
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(
+                PowerManager.SCREEN_DIM_WAKE_LOCK
+                        | PowerManager.ON_AFTER_RELEASE
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP, "bbbb");
+//                wl.acquire(15000);
+        wl.acquire(1500);
+//        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
+//        final KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+//        lock.disableKeyguard();
+////        Thread wake =
                 new Thread(new Runnable() {
             @Override
             public void run() {
-
-                pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                wl = pm.newWakeLock(
-                        PowerManager.SCREEN_DIM_WAKE_LOCK
-                                | PowerManager.ON_AFTER_RELEASE
-                                | PowerManager.ACQUIRE_CAUSES_WAKEUP, "bbbb");
-//                wl.acquire(15000);
-                wl.acquire();
-                KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
-                final KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-                lock.disableKeyguard();
-
-
                 notification(data);
-
             }
         }).start();
 
