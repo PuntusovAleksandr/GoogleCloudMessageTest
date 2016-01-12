@@ -1,5 +1,7 @@
 package com.example.zloj.googlecloudmessagetest.gcm;
 
+import android.app.Activity;
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -31,6 +33,18 @@ public class GCMListener extends GcmListenerService {
                 new Thread(new Runnable() {
             @Override
             public void run() {
+
+                pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                wl = pm.newWakeLock(
+                        PowerManager.SCREEN_DIM_WAKE_LOCK
+                                | PowerManager.ON_AFTER_RELEASE
+                                | PowerManager.ACQUIRE_CAUSES_WAKEUP, "bbbb");
+//                wl.acquire(15000);
+                wl.acquire();
+                KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
+                final KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+                lock.disableKeyguard();
+
 
                 notification(data);
 
@@ -72,6 +86,7 @@ public class GCMListener extends GcmListenerService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_stat_ic_notification)
                         .setContentTitle(message.getString("title"))
+                        .setAutoCancel(true)
                         .setContentText(message.getString("message"));
 
         MediaPlayer mPlayer = MediaPlayer.create(this, R.raw.mix);
